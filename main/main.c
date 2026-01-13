@@ -8,11 +8,13 @@ one button input, one LED output*/
 
 #define LED_PIN GPIO_NUM_10         // Choose your LED pin
 #define BUTTON_PIN GPIO_NUM_4       // Choose your button pin
+#define BUTTON_PIN2 GPIO_NUM_5
 
 bool lstate = false;
 bool bstate = false;
 int button_count = 0;
 bool pressed;
+bool pressed2;
 
 void app_main(void) {
 
@@ -30,26 +32,33 @@ void app_main(void) {
     gpio_pulldown_dis(BUTTON_PIN);
     gpio_intr_disable(BUTTON_PIN);
 
+    gpio_reset_pin(BUTTON_PIN2);
+    gpio_set_direction(BUTTON_PIN2, GPIO_MODE_INPUT);
+    gpio_pullup_en(BUTTON_PIN2);
+    gpio_pulldown_dis(BUTTON_PIN2);
+    gpio_intr_disable(BUTTON_PIN2);
+
     while (1) {
     // TO-DO: Implement LED toggle and button logic here
         pressed = gpio_get_level(BUTTON_PIN) == 0;
+        pressed2 = gpio_get_level(BUTTON_PIN2) == 0;
 
         // Check for button press and release
-        if (!bstate && pressed && (button_count == 0)) {
+        if (!bstate && pressed && pressed2 && (button_count == 0)) {
             bstate = true;
         }
 
-        if (bstate && !pressed && (button_count == 0)) {
+        if (bstate && !pressed && pressed2 && (button_count == 0)) {
             bstate = false;
             button_count = 1;       //Count one button press
         }
 
         // Check for second button press and release
-        if (!bstate && pressed && (button_count == 1)) {
+        if (!bstate && pressed && pressed2 && (button_count == 1)) {
             bstate = true;
         }
 
-        if (bstate && !pressed && (button_count == 1)) {
+        if (bstate && !pressed && pressed2 && (button_count == 1)) {
             lstate = !lstate;   // Toggle LED state variable
             bstate = false;
             button_count = 0;   // Reset button count to 0
