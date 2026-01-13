@@ -1,3 +1,8 @@
+/*Erika Skobel
+1/13/2026
+code toggles LED every other time the button is pressed
+one button input, one LED output*/
+
 #include "freertos/FreeRTOS.h"
 #include "driver/gpio.h"
 
